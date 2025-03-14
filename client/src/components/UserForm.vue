@@ -93,6 +93,14 @@ function resetForm() {
 async function submitForm() {
     form.value.roles = rolesInput.value.split(',').map(role => role.trim())
 
+    const confirmMessage = props.userData?._id
+    ? 'Are you sure you want to update this user?'
+    : 'Are you sure you want to create this user?'
+
+    if (!confirm(confirmMessage)) {
+        return;  // Stop submission if the user cancels
+    }
+
     // Create a safe copy of the form to avoid modifying the original
     const payload = { ...form.value }
 
