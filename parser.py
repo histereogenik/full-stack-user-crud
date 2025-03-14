@@ -2,7 +2,8 @@ import json
 import datetime
 from dataclasses import dataclass, asdict
 from typing import List
-from pymongo import MongoClient, errors
+from pymongo import errors
+from server.db import users_collection
 import logging
 
 # Configure logging
@@ -41,8 +42,8 @@ def parse_iso_to_timestamp(iso_str: str) -> float:
         return 0.0
 
 def main():
+    # Load JSON data
     try:
-        # Load JSON data
         with open("udata.json", "r") as f:
             data = json.load(f)
     except FileNotFoundError as e:
@@ -50,15 +51,6 @@ def main():
         return
     except json.JSONDecodeError as e:
         logging.error(f"Error decoding JSON: {e}")
-        return
-
-    try:
-        # Connect to MongoDB
-        client = MongoClient("mongodb://localhost:27017/")
-        db = client["mydatabase"]
-        users_collection = db["users"]
-    except errors.ConnectionError as e:
-        logging.error(f"Error connecting to MongoDB: {e}")
         return
 
     # Parse JSON data and insert into MongoDB
