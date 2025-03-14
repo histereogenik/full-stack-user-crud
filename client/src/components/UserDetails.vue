@@ -17,14 +17,14 @@
                 </div>
 
                 <div class="actions">
-                        <Button label="Edit" icon="pi pi-pencil" severity="info" outlined @click="openEditModal" />
+                        <Button label="Edit" icon="pi pi-pencil" severity="info" outlined @click="editUser" />
                         <Button label="Delete" icon="pi pi-trash" severity="danger" outlined @click="deleteUser" />
                         <Button label="Back" icon="pi pi-arrow-left" severity="secondary" outlined @click="goBack" />
                 </div>
 
                 <UserForm
-                :visible="showEditModal"
-                :userData="user"
+                :visible="showModal"
+                :userData="modalData"
                 @close="closeModal"
                 @submitted="handleUserUpdated"
                 />
@@ -41,6 +41,7 @@ import Card from 'primevue/card'
 import Tag from 'primevue/tag'
 import Button from 'primevue/button'
 import UserForm from './UserForm.vue'
+import { useModal } from '../composables/useModal'
 
 interface User {
     _id: string
@@ -55,7 +56,7 @@ const route = useRoute()
 const router = useRouter()
 
 const user = ref<User | null>(null)
-const showEditModal = ref(false)
+    const { showModal, modalData, openModal, closeModal } = useModal<User>()
 
 async function fetchUser() {
     try {
@@ -66,12 +67,8 @@ async function fetchUser() {
     }
 }
 
-function openEditModal() {
-    showEditModal.value = true
-}
-
-function closeModal() {
-    showEditModal.value = false
+function editUser() {
+    openModal(user.value!)
 }
 
 function goBack() {

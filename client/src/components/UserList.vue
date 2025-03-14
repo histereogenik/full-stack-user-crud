@@ -2,7 +2,7 @@
     <div class="user-management">
         <h2 class="mb-4">User Management</h2>
 
-        <Button label="Create User" icon="pi pi-plus" class="mb-4" @click="openCreateModal" />
+        <Button label="Create User" icon="pi pi-plus" class="mb-4" @click="openModal()" />
 
         <DataTable :value="users" paginator :rows="10">
             <Column header="Username">
@@ -53,9 +53,9 @@
             </Column>
         </DataTable>
         <UserForm 
-            :visible="showUserForm" 
-            :userData="selectedUser" 
-            @close="showUserForm = false" 
+            :visible="showModal" 
+            :userData="modalData" 
+            @close="closeModal" 
             @submitted="onFormSubmitted"
         />
     </div>
@@ -69,6 +69,7 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Tag from 'primevue/tag'
 import UserForm from './UserForm.vue'
+import { useModal } from '../composables/useModal'
 
 interface User {
     _id: string
@@ -80,22 +81,15 @@ interface User {
 }
 
 const users = ref<User[]>([])
-const selectedUser = ref<User | undefined>(undefined)
-const showUserForm = ref(false)
+    const { showModal, modalData, openModal, closeModal } = useModal<User>()
 
 async function fetchUsers() {
     const { data } = await axios.get('http://127.0.0.1:5000/users/')
     users.value = data
 }
 
-function openCreateModal() {
-    selectedUser.value = undefined
-    showUserForm.value = true
-}
-
 function editUser(user: User) {
-    selectedUser.value = user
-    showUserForm.value = true
+    openModal(user)
 }
 
 function confirmDeleteUser(userId: string) {
@@ -114,12 +108,8 @@ async function deleteUser(userId: string) {
 }
 
 function onFormSubmitted() {
-    closeUserModal()
+    closeModal()
     fetchUsers()
-}
-
-function closeUserModal() {
-    showUserForm.value = false
 }
 
 onMounted(fetchUsers)

@@ -1,12 +1,12 @@
 <template>
-    <Dialog :visible="visible" :header="isEdit ? 'Edit User' : 'Create User'" modal class="user-dialog" @hide="$emit('close')">
+    <Dialog :visible="visible" :header="isEdit ? 'Edit User' : 'Create User'" modal class="user-dialog" @hide="closeModal">
         <div class="form-container">
             <div class="field">
                 <label for="username">Username</label>
                 <InputText id="username" v-model="form.username" class="input-field" />
             </div>
 
-            <div class="field">
+            <div class="field" v-if="!isEdit">
                 <label for="password">Password</label>
                 <InputText id="password" type="password" v-model="form.password" class="input-field" />
             </div>
@@ -27,7 +27,7 @@
             </div>
 
             <div class="form-actions">
-                <Button label="Cancel" severity="secondary" @click="$emit('close')" />
+                <Button label="Cancel" severity="secondary" @click="closeModal" />
                 <Button :label="isEdit ? 'Update' : 'Create'" @click="submitForm" />
             </div>
         </div>
@@ -78,6 +78,9 @@ watch(() => props.userData, (userData) => {
     }
 }, { immediate: true })
 
+function closeModal() {
+    emit('close')
+}
 
 function resetForm() {
     form.value = {
