@@ -1,4 +1,7 @@
+from time import time
 from flask import Blueprint, request, jsonify
+from marshmallow import ValidationError
+from server.schemas import UserSchema
 from pymongo import errors
 from bson.objectid import ObjectId
 from server.db import users_collection
@@ -44,7 +47,16 @@ def create_user():
         if not data:
             return jsonify({"error": "Missing request body"}), 400
         
-        result = users_collection.insert_one(data)
+        # Validate input data
+        schema = UserSchema()
+        try:
+            validated_data = schema.load(data)
+        except ValidationError as e:
+            return jsonify({"error": e.messages}), 400
+        
+        validated_data["created_ts"] = time()
+
+        result = users_collection.insert_one(validated_data)
         new_user = users_collection.find_one({"_id": result.inserted_id})
         new_user["_id"] = str(new_user["_id"])
         return jsonify(new_user), 201
@@ -58,9 +70,16 @@ def update_user(user_id):
         if not data:
             return jsonify({"error": "Missing request body"}), 400
         
+        # Validate input data
+        schema = UserSchema(partial=True)
+        try:
+            validated_data = schema.load(data)
+        except ValidationError as e:
+            return jsonify({"error": e.messages}), 400
+        
         result = users_collection.update_one(
             {"_id": ObjectId(user_id)},
-            {"$set": data}
+            {"$set": validated_data}
         )
         if result.modified_count == 0:
             return jsonify({"error": "User not found"}), 404
