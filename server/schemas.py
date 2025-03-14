@@ -1,7 +1,9 @@
 from marshmallow import Schema, fields
 
+
 class UserPreferencesSchema(Schema):
     timezone = fields.Str(required=True)
+
 
 class UserSchema(Schema):
     username = fields.Str(required=True)
