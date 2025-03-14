@@ -1,36 +1,25 @@
 <template>
-    <div class="p-4" v-if="user">
-        <h2>User Details: {{ user.username }}</h2>
-        <Card>
+    <div class="user-details" v-if="user">
+        <h2 class="page-title">User Details</h2>
+        <Card class="user-card">
             <template #content>
-                <div class="grid">
-                    <div class="col-6">
-                        <strong>Username:</strong> {{ user.username }}
-                    </div>
-                    <div class="mt-2">
-                        <strong>Roles:</strong> {{ user.roles.join(', ') }}
-                    </div>
-                    <div class="mt-2">
-                        <strong>Timezone:</strong> {{ user.preferences.timezone }}
-                    </div>
-                    <div class="mt-2">
-                        <strong>Last Updated At:</strong> -
-                    </div>
-                    <div class="mt-2">
+                <div class="details-grid">
+                    <div><strong>Username:</strong> {{ user.username }}</div>
+                    <div><strong>Roles:</strong> {{ user.roles.join(', ') }}</div>
+                    <div><strong>Timezone:</strong> {{ user.preferences.timezone }}</div>
+                    <div>
                         <strong>Active:</strong>
-                        <Tag :severity="user.active ? 'success' : 'danger'">
+                        <Tag class="active-m" :severity="user.active ? 'success' : 'danger'">
                             {{ user.active ? 'Yes' : 'No' }}
                         </Tag>
                     </div>
-                    <div class="mt-2">
-                        <strong>Created At:</strong> {{ new Date(user.created_ts * 1000).toLocaleString() }}
-                    </div>
+                    <div><strong>Created At:</strong> {{ new Date(user.created_ts * 1000).toLocaleString() }}</div>
                 </div>
 
-                <div class="mt-4 flex gap-2">
-                    <Button label="Edit" icon="pi pi-pencil" @click="openEditModal" severity="info" outlined />
-                    <Button label="Delete" icon="pi pi-trash" @click="deleteUser" severity="danger" outlined />
-                    <Button label="Back" icon="pi pi-arrow-left" @click="goBack" severity="secondary" outlined />
+                <div class="actions">
+                        <Button label="Edit" icon="pi pi-pencil" severity="info" outlined @click="openEditModal" />
+                        <Button label="Delete" icon="pi pi-trash" severity="danger" outlined @click="deleteUser" />
+                        <Button label="Back" icon="pi pi-arrow-left" severity="secondary" outlined @click="goBack" />
                 </div>
 
                 <UserForm
@@ -107,3 +96,41 @@ async function deleteUser() {
 
 onMounted(fetchUser)
 </script>
+
+<style scoped>
+.user-details {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.user-card {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #242424;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+}
+.active-m {
+    margin-left: 0.3rem
+}
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+</style>
