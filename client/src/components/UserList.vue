@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4">
+    <div class="user-management">
         <h2 class="mb-4">User Management</h2>
 
         <Button label="Create User" icon="pi pi-plus" class="mb-4" @click="openCreateModal" />
@@ -7,7 +7,7 @@
         <DataTable :value="users" paginator :rows="10">
             <Column header="Username">
                 <template #body="{ data }">
-                    <router-link :to="`/users/${data._id}`">{{ data.username }}</router-link>
+                    <router-link class="user-link" :to="`/users/${data._id}`">{{ data.username }}</router-link>
                 </template>
             </Column>
 
@@ -45,8 +45,10 @@
 
             <Column header="Actions">
                 <template #body="{ data }">
-                    <Button icon="pi pi-pencil" severity="info" outlined @click="editUser(data)" />
-                    <Button icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteUser(data._id)" />
+                    <div class="action-buttons">
+                        <Button icon="pi pi-pencil" severity="info" outlined @click="editUser(data)" />
+                        <Button icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteUser(data._id)" />
+                    </div>
                 </template>
             </Column>
         </DataTable>
@@ -122,3 +124,28 @@ function closeUserModal() {
 
 onMounted(fetchUsers)
 </script>
+
+<style scoped>
+.user-link {
+    color: #a0c4ff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.user-link:hover {
+    color: #90caf9;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.user-management {
+    padding: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+</style>
