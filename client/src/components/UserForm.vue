@@ -91,12 +91,22 @@ function resetForm() {
 }
 
 async function submitForm() {
+    form.value.roles = rolesInput.value.split(',').map(role => role.trim())
+
+    // Create a safe copy of the form to avoid modifying the original
+    const payload = { ...form.value }
+
+    // Remove fields not allowed by backend
+    delete (payload as any)._id
+    delete (payload as any).created_ts
+
     try {
-        form.value.roles = rolesInput.value.split(',').map(role => role.trim())
-        if (props.userData && '_id' in props.userData) {
-            await axios.put(`http://127.0.0.1:5000/users/${props.userData._id}`, form.value)
+        if (props.userData?._id) {
+        // Edit mode
+            await axios.put(`http://127.0.0.1:5000/users/${props.userData._id}`, payload)
         } else {
-            await axios.post('http://127.0.0.1:5000/users/', form.value)
+        // Create mode
+            await axios.post('http://127.0.0.1:5000/users/', payload)
         }
         emit('submitted')
     } catch (error) {
