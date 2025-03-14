@@ -1,24 +1,24 @@
 <template>
-    <Dialog :visible="visible" :header="isEdit ? 'Edit User' : 'Create User'" modal @hide="$emit('close')">
-        <div class="p-4">
+    <Dialog :visible="visible" :header="isEdit ? 'Edit User' : 'Create User'" modal class="user-dialog" @hide="$emit('close')">
+        <div class="form-container">
             <div class="field">
                 <label for="username">Username</label>
-                <InputText id="username" v-model="form.username" />
+                <InputText id="username" v-model="form.username" class="input-field" />
             </div>
 
-            <div class="field mt-2">
+            <div class="field">
                 <label for="password">Password</label>
-                <InputText id="password" type="password" v-model="form.password" />
+                <InputText id="password" type="password" v-model="form.password" class="input-field" />
             </div>
 
             <div class="field">
                 <label for="roles">Roles (comma-separated)</label>
-                <InputText id="roles" v-model="rolesInput" />
+                <InputText id="roles" v-model="rolesInput" class="input-field" />
             </div>
 
             <div class="field">
                 <label for="timezone">Timezone</label>
-                <InputText id="timezone" v-model="form.preferences.timezone" />
+                <InputText id="timezone" v-model="form.preferences.timezone" class="input-field" />
             </div>
 
             <div class="field-checkbox">
@@ -26,7 +26,7 @@
                 <label for="active">Active</label>
             </div>
 
-            <div class="mt-4 flex gap-2">
+            <div class="form-actions">
                 <Button label="Cancel" severity="secondary" @click="$emit('close')" />
                 <Button :label="isEdit ? 'Update' : 'Create'" @click="submitForm" />
             </div>
@@ -122,3 +122,39 @@ async function submitForm() {
     }
 }
 </script>
+
+<style scoped>
+.user-dialog {
+    max-width: 500px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-field {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+.field-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+</style>
