@@ -8,5 +8,5 @@ def get_database(testing=False):
     return db
 
 
-db = get_database(testing=True)
+db = get_database(testing=False)
 users_collection = db["users"]
