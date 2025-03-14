@@ -1,0 +1,106 @@
+<template>
+    <Dialog :visible="visible" :header="isEdit ? 'Edit User' : 'Create User'" modal @hide="$emit('close')">
+        <div class="p-4">
+            <div class="field">
+                <label for="username">Username</label>
+                <InputText id="username" v-model="form.username" />
+            </div>
+
+            <div class="field mt-2">
+                <label for="password">Password</label>
+                <InputText id="password" type="password" v-model="form.password" />
+            </div>
+
+            <div class="field">
+                <label for="roles">Roles (comma-separated)</label>
+                <InputText id="roles" v-model="rolesInput" />
+            </div>
+
+            <div class="field">
+                <label for="timezone">Timezone</label>
+                <InputText id="timezone" v-model="form.preferences.timezone" />
+            </div>
+
+            <div class="field-checkbox">
+                <Checkbox v-model="form.active" inputId="active" binary />
+                <label for="active">Active</label>
+            </div>
+
+            <div class="mt-4 flex gap-2">
+                <Button label="Cancel" severity="secondary" @click="$emit('close')" />
+                <Button :label="isEdit ? 'Update' : 'Create'" @click="submitForm" />
+            </div>
+        </div>
+    </Dialog>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import axios from 'axios'
+import Dialog from 'primevue/dialog'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import Checkbox from 'primevue/checkbox'
+
+interface UserForm {
+    username: string
+    password?: string
+    roles: string[]
+    preferences: { timezone: string }
+    active: boolean
+}
+
+const props = defineProps<{
+    visible: boolean,
+    userData?: UserForm & { _id: string }
+}>()
+
+const emit = defineEmits(['close', 'submitted'])
+
+const isEdit = computed(() => !!props.userData)
+
+const form = ref<UserForm>({
+    username: '',
+    password: '',
+    roles: [],
+    preferences: { timezone: '' },
+    active: true
+})
+
+const rolesInput = ref('')
+
+watch(() => props.userData, (userData) => {
+    if (userData) {
+        form.value = { ...userData }
+        rolesInput.value = userData.roles.join(', ')
+    } else {
+        resetForm()
+    }
+}, { immediate: true })
+
+
+function resetForm() {
+    form.value = {
+        username: '',
+        password: '',
+        roles: [],
+        preferences: { timezone: '' },
+        active: true
+    }
+    rolesInput.value = ''
+}
+
+async function submitForm() {
+    try {
+        form.value.roles = rolesInput.value.split(',').map(role => role.trim())
+        if (props.userData && '_id' in props.userData) {
+            await axios.put(`http://127.0.0.1:5000/users/${props.userData._id}`, form.value)
+        } else {
+            await axios.post('http://127.0.0.1:5000/users/', form.value)
+        }
+        emit('submitted')
+    } catch (error) {
+        console.error(error)
+    }
+}
+</script>
