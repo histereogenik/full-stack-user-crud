@@ -1,4 +1,4 @@
-import "./style.css"
+import './style.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -15,9 +15,9 @@ app.use(PrimeVue, {
     theme: {
         preset: Aura
     },
-    
+
     ripple: true,
-    inputStyle: 'filled',
+    inputStyle: 'filled'
 })
 
 app.mount('#app')

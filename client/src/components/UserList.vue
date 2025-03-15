@@ -7,13 +7,15 @@
         <DataTable :value="users" paginator :rows="10">
             <Column header="Username">
                 <template #body="{ data }">
-                    <router-link class="user-link" :to="`/users/${data._id}`">{{ data.username }}</router-link>
+                    <router-link class="user-link" :to="`/users/${data._id}`">{{
+                        data.username
+                    }}</router-link>
                 </template>
             </Column>
 
             <Column header="Roles">
                 <template #body="{ data }">
-                    {{ data.roles.join(", ") }}
+                    {{ data.roles.join(', ') }}
                 </template>
             </Column>
 
@@ -32,9 +34,7 @@
             </Column>
 
             <Column header="Last Updated At">
-                <template #body>
-                    -
-                </template>
+                <template #body> - </template>
             </Column>
 
             <Column header="Created At">
@@ -46,16 +46,26 @@
             <Column header="Actions">
                 <template #body="{ data }">
                     <div class="action-buttons">
-                        <Button icon="pi pi-pencil" severity="info" outlined @click="editUser(data)" />
-                        <Button icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteUser(data._id)" />
+                        <Button
+                            icon="pi pi-pencil"
+                            severity="info"
+                            outlined
+                            @click="editUser(data)"
+                        />
+                        <Button
+                            icon="pi pi-trash"
+                            severity="danger"
+                            outlined
+                            @click="confirmDeleteUser(data._id)"
+                        />
                     </div>
                 </template>
             </Column>
         </DataTable>
-        <UserForm 
-            :visible="showModal" 
-            :userData="modalData" 
-            @close="closeModal" 
+        <UserForm
+            :visible="showModal"
+            :userData="modalData"
+            @close="closeModal"
             @submitted="onFormSubmitted"
         />
     </div>
@@ -81,7 +91,7 @@ interface User {
 }
 
 const users = ref<User[]>([])
-    const { showModal, modalData, openModal, closeModal } = useModal<User>()
+const { showModal, modalData, openModal, closeModal } = useModal<User>()
 
 async function fetchUsers() {
     const { data } = await axios.get('http://127.0.0.1:5000/users/')
@@ -93,7 +103,7 @@ function editUser(user: User) {
 }
 
 function confirmDeleteUser(userId: string) {
-    if (confirm("Are you sure you want to delete this user?")) {
+    if (confirm('Are you sure you want to delete this user?')) {
         deleteUser(userId)
     }
 }

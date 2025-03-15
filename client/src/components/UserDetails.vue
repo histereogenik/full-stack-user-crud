@@ -13,20 +13,41 @@
                             {{ user.active ? 'Yes' : 'No' }}
                         </Tag>
                     </div>
-                    <div><strong>Created At:</strong> {{ new Date(user.created_ts * 1000).toLocaleString() }}</div>
+                    <div>
+                        <strong>Created At:</strong>
+                        {{ new Date(user.created_ts * 1000).toLocaleString() }}
+                    </div>
                 </div>
 
                 <div class="actions">
-                        <Button label="Edit" icon="pi pi-pencil" severity="info" outlined @click="editUser" />
-                        <Button label="Delete" icon="pi pi-trash" severity="danger" outlined @click="deleteUser" />
-                        <Button label="Back" icon="pi pi-arrow-left" severity="secondary" outlined @click="goBack" />
+                    <Button
+                        label="Edit"
+                        icon="pi pi-pencil"
+                        severity="info"
+                        outlined
+                        @click="editUser"
+                    />
+                    <Button
+                        label="Delete"
+                        icon="pi pi-trash"
+                        severity="danger"
+                        outlined
+                        @click="deleteUser"
+                    />
+                    <Button
+                        label="Back"
+                        icon="pi pi-arrow-left"
+                        severity="secondary"
+                        outlined
+                        @click="goBack"
+                    />
                 </div>
 
                 <UserForm
-                :visible="showModal"
-                :userData="modalData"
-                @close="closeModal"
-                @submitted="handleUserUpdated"
+                    :visible="showModal"
+                    :userData="modalData"
+                    @close="closeModal"
+                    @submitted="handleUserUpdated"
                 />
             </template>
         </Card>
@@ -56,7 +77,7 @@ const route = useRoute()
 const router = useRouter()
 
 const user = ref<User | null>(null)
-    const { showModal, modalData, openModal, closeModal } = useModal<User>()
+const { showModal, modalData, openModal, closeModal } = useModal<User>()
 
 async function fetchUser() {
     try {
@@ -122,12 +143,11 @@ onMounted(fetchUser)
     padding: 1rem;
 }
 .active-m {
-    margin-left: 0.3rem
+    margin-left: 0.3rem;
 }
 .actions {
     display: flex;
     justify-content: space-between;
     margin-top: 1.5rem;
 }
-
 </style>

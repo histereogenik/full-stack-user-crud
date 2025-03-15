@@ -4,7 +4,7 @@ import UserDetails from '../components/UserDetails.vue'
 
 const routes = [
     { path: '/', component: UserList },
-    { path: '/users/:id', component: UserDetails}
+    { path: '/users/:id', component: UserDetails }
 ]
 
 const router = createRouter({
