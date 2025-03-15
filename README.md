@@ -74,6 +74,32 @@ From your project's root directory, execute:
 python -m server.app
 ```
 
+## Running the Frontend (Vue + Vite)
+
+### 1. Navigate to the Client Folder
+
+```powershell
+cd client
+```
+
+### 2. Install Dependencies
+
+```powershell
+npm install
+```
+
+### 3. Run the Development Server
+
+```powershell
+npm run dev
+```
+
+The Vue application will be available at:
+
+```powershell
+http://localhost:5173
+```
+
 ## Running Tests
 
 To ensure that tests do not affect your main database, the tests use a separate test database.
